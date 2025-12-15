@@ -1,0 +1,98 @@
+import pandas as pd
+
+# Load your data
+df = pd.read_csv("your_data.csv")  # Replace with your file
+
+# -----------------------------
+# Scenario 1: Compare total sales by loyalty program
+# Focus: Sales performance vs customer retention
+# -----------------------------
+loyalty_sales = df.groupby('loyalty_program')['total_sales'].sum().sort_values(ascending=False)
+print("Total Sales by Loyalty Program:\n", loyalty_sales)
+
+# -----------------------------
+# Scenario 2: Compare average purchase value by customer segment (income bracket)
+# Focus: Customer behavior impact on revenue
+# -----------------------------
+income_avg_purchase = df.groupby('income_bracket')['avg_purchase_value'].mean().sort_values(ascending=False)
+print("Average Purchase Value by Income Bracket:\n", income_avg_purchase)
+
+# -----------------------------
+# Scenario 3: Compare online vs in-store sales by preferred store
+# Focus: Channel strategy
+# -----------------------------
+store_channel_sales = df.groupby('preferred_store')[['online_purchases','in_store_purchases','total_sales']].sum()
+store_channel_sales['online_ratio'] = store_channel_sales['online_purchases'] / (store_channel_sales['online_purchases'] + store_channel_sales['in_store_purchases'])
+print("Store vs Online Sales:\n", store_channel_sales)
+
+# -----------------------------
+# Scenario 4: Compare churned vs non-churned customers
+# Focus: Retention impact on revenue
+# -----------------------------
+churn_analysis = df.groupby('churned')[['total_sales','total_transactions','avg_spent_per_category']].mean()
+print("Churned vs Non-Churned Customers:\n", churn_analysis)
+
+# -----------------------------
+# Scenario 5: Compare product categories by total sales and average discount
+# Focus: Product performance & pricing strategy
+# -----------------------------
+product_category_perf = df.groupby('product_category')[['total_sales','avg_discount_used']].mean().sort_values(by='total_sales', ascending=False)
+print("Product Category Performance:\n", product_category_perf)
+
+# -----------------------------
+# Scenario 6: Compare sales by season and weekend
+# Focus: Seasonal and weekend effect on revenue
+# -----------------------------
+season_weekend_sales = df.groupby(['season','weekend'])['total_sales'].sum().unstack(fill_value=0)
+print("Sales by Season and Weekend:\n", season_weekend_sales)
+
+# -----------------------------
+# Scenario 7: Compare customer support calls vs sales
+# Focus: Service impact on revenue
+# -----------------------------
+support_sales = df.groupby('customer_support_calls')[['total_sales','total_transactions']].mean().sort_index()
+print("Customer Support Calls vs Sales:\n", support_sales)
+
+# -----------------------------
+# Scenario 8: Compare top cities by total sales and average transaction value
+# Focus: Geography impact
+# -----------------------------
+city_sales = df.groupby('customer_city')[['total_sales','avg_transaction_value']].sum().sort_values(by='total_sales', ascending=False).head(10)
+print("Top Cities by Sales:\n", city_sales)
+
+import matplotlib.pyplot as plt
+
+loyalty_sales = df.groupby('loyalty_program')['total_sales'].sum().sort_values(ascending=False)
+
+loyalty_sales.plot(kind='bar', figsize=(8,5))
+plt.title("Total Sales by Loyalty Program")
+plt.xlabel("Loyalty Program")
+plt.ylabel("Total Sales")
+plt.show()
+
+income_avg = df.groupby('income_bracket')['avg_purchase_value'].mean().sort_values(ascending=False)
+
+income_avg.plot(kind='bar', figsize=(8,5))
+plt.title("Average Purchase Value by Income Bracket")
+plt.xlabel("Income Bracket")
+plt.ylabel("Avg Purchase Value")
+plt.show()
+
+
+channel_totals = df[['online_purchases','in_store_purchases']].sum()
+
+channel_totals.plot(kind='pie', autopct='%1.1f%%', figsize=(6,6))
+plt.title("Online vs In-Store Purchases")
+plt.ylabel("")
+plt.show()
+
+churn_sales = df.groupby('churned')['total_sales'].mean()
+
+churn_sales.plot(kind='bar', figsize=(6,5))
+plt.title("Average Sales: Churned vs Non-Churned Customers")
+plt.xlabel("Churned")
+plt.ylabel("Average Total Sales")
+plt.show()
+
+
+
