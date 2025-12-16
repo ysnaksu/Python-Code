@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Load your data
-df = pd.read_csv("your_data.csv")  # Replace with your file
+df = pd.read_excel("retail_data.xlsx")  
 
 # -----------------------------
 # Scenario 1: Compare total sales by loyalty program
